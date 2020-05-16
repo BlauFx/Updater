@@ -1,2 +1,2 @@
 # Updater
-Just a updater for my programs
+Just an updater for my programs
