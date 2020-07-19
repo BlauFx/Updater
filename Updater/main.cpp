@@ -46,14 +46,13 @@ void GetProcessNameByID(DWORD processID, bool Change)
 
 int main(int argc, char* argv[]) {
 
-    if (argc <= 2) {
+    if (argc <= 1) {
         exit(0);
     }
 
     ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 
     std::string PID = argv[1];
-    std::string File_Location = argv[2];
 
     GetProcessNameByID(std::stoi(PID), true);
 
@@ -78,6 +77,12 @@ int main(int argc, char* argv[]) {
 
     } while (IsProcessRunning);
 
+
+    std::string File_Location = ProcessName;
+    std::size_t found = File_Location.find_last_of("/\\");
+
+    File_Location = File_Location.substr(0, found);
+
     namespace fs = std::filesystem;
     for (fs::path p : fs::directory_iterator(File_Location)) {
         if (p.filename().compare("temp") == 0 || p.filename().compare("Songs") == 0) {
@@ -97,7 +102,9 @@ int main(int argc, char* argv[]) {
         fs::rename(p, File_Location / p.filename());
     }
 
-    std::string Start = "start " + ProcessName2;
+    std::string Start = "start \"\" \"" + ProcessName2;
+    Start += "\"";
+
     system(Start.c_str());
     
     return 0;
